@@ -1,38 +1,68 @@
-.App {
+.mainHeader {
+  background-color: red;
+  text-align: center;
+  padding: 10px;
+  height: 10%;
+}
+
+.sideMenu {
+  width: 30%;
+  height: 100%;
+  position: fixed;
+  background-color: lightgreen;
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.sideButton {
+  background-color: gray;
+  text-align: center;
+  margin: 10px 10px 10px;
+  padding: 20px;
+  align-content: center;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.main {
+  float: right;
+  text-align: center;
+  background-color: lightgray;
+  width: 70%;
+  height: 83%;
+  left: 30%;
+  position: fixed;
+  padding-top: 20px;
+  overflow-y: scroll;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.articleBig {
+  margin: 60px;
+  padding: 50px;
+  background-color: yellow;
+  text-align: center;
+  position: relative;
 }
 
-.App-link {
-  color: #61dafb;
+.articleSmall {
+  margin: 60px;
+  padding-top: 50px;
+  padding-bottom: 50px;
+  text-align: center;
+  background-color: yellow;
+  width: 38.5%;
+  position: relative;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.dot {
+  position: absolute;
+  top: -45px;
+  left: -45px;
+  height: 90px;
+  width: 90px;
+  text-align: center;
+  background-color: red;
+  border-radius: 50%;
+}
+
+.warAndPeace {
+  padding: 30px;
+  margin-bottom: 100px;
 }
