@@ -1,0 +1,7 @@
+.Comment {
+    background-color: lightblue;
+    display: flex;
+    margin: 10px;
+    flex-direction: row;
+    justify-content: space-between;
+}

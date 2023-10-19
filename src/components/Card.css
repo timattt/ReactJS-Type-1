@@ -1,20 +1,25 @@
 .CardComponent {
+    display: inline-flex;
     background-color: lightcoral;
     text-align: center;
-    margin: 2% 20% 3%;
-    padding: 2% 1% 2%;
+    margin: 50px;
+    flex-direction: column;
 }
 
 .likesCount {
-    margin-top: 4%;
-    text-align: center;
-    position: relative;
-    left: -42%;
+    align-self: flex-start;
+    margin: 30px;
 }
 
 .likeButton {
-    text-align: center;
-    position: relative;
-    left: 42%;
-    margin-bottom: 4%;
+    align-self: flex-end;
+}
+
+.commentsHolder {
+    display: flex;
+    flex-direction: column;
+}
+
+.showComments {
+    align-self: flex-start;
 }
