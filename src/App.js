@@ -2,7 +2,7 @@ import localArticles from './assets/articles.json'
 import localComments from './assets/comments.json'
 import CardComponent from './components/Card'
 import NewCardsCreator from "./components/NewCardsCreator";
-import './App.css'
+import './styles/App.css'
 import {useState} from "react";
 
 function App() {

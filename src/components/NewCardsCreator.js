@@ -1,5 +1,5 @@
 import {useState} from "react";
-import './NewCardsCreator.css'
+import './styles/NewCardsCreator.css'
 
 export default function NewCardsCreator(props) {
     const [title, setTitle] = useState("New title")

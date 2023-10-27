@@ -1,4 +1,4 @@
-import './Comment.css'
+import './styles/Comment.css'
 
 export default function Comment(props) {
     const {author, text, commentId} = props.data

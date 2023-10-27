@@ -1,4 +1,4 @@
-import './Card.css'
+import './styles/Card.css'
 import React from 'react';
 import Comment from "./Comment";
 import NewCommentsCreator from "./NewCommentsCreator";
