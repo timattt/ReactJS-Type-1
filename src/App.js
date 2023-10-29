@@ -5,11 +5,18 @@ import NewCardsCreator from "./components/NewCardsCreator";
 import './styles/App.css'
 import {useState} from "react";
 
+async function testFetch() {
+  const res = await (await fetch("http://localhost:8181/comments")).json()
+  console.log(res)
+}
+
 function App() {
   const [comments, setComments] = useState(localComments)
   const [articles, setArticles] = useState(localArticles)
 
   const [idGenerator, setIdGenerator] = useState(100)
+
+  testFetch()
 
   function addNewArticle(text, title) {
     // STUB
