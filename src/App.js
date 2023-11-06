@@ -3,8 +3,8 @@ import NewCardsCreator from "./components/NewCardsCreator";
 import './styles/App.css'
 import {useState} from "react";
 
-const articles_url = "http://localhost:8181/articles"
-const comments_url = "http://localhost:8181/comments"
+const articles_url = "http://" + process.env.BACKEND_IP + ":" + process.env.BACKEND_PORT + "/articles"
+const comments_url = "http://" + process.env.BACKEND_IP + ":" + process.env.BACKEND_PORT + "/comments"
 
 function App() {
   const [comments, setComments] = useState([])
