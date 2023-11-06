@@ -1,39 +1,66 @@
-import localArticles from './assets/articles.json'
-import localComments from './assets/comments.json'
 import CardComponent from './components/Card'
 import NewCardsCreator from "./components/NewCardsCreator";
 import './styles/App.css'
 import {useState} from "react";
 
-async function testFetch() {
-  const res = await (await fetch("http://localhost:8181/comments")).json()
-  console.log(res)
-}
+const articles_url = "http://localhost:8181/articles"
+const comments_url = "http://localhost:8181/comments"
 
 function App() {
-  const [comments, setComments] = useState(localComments)
-  const [articles, setArticles] = useState(localArticles)
+  const [comments, setComments] = useState([])
+  const [articles, setArticles] = useState([])
 
-  const [idGenerator, setIdGenerator] = useState(100)
-
-  testFetch()
+  fetch(articles_url).then(res => res.json()
+  ).then(data => {
+    const old = JSON.stringify(articles)
+    const newData = JSON.stringify(data)
+    if (old !== newData) {
+      setArticles([...data])
+    }
+  }).catch((res) => {
+    console.error("Failed to fetch articles from: [" + articles_url + "]")
+  })
+  fetch(comments_url).then(res => res.json()
+  ).then(data => {
+    const old = JSON.stringify(comments)
+    const newData = JSON.stringify(data)
+    if (old !== newData) {
+      setComments([...data])
+    }
+  }).catch((res) => {
+    console.error("Failed to fetch comments from: [" + comments_url + "]")
+  })
 
   function addNewArticle(text, title) {
-    // STUB
-    setArticles([{text: text, title: title, articleId: idGenerator, currentLikes: 0, commentsCount: 0}, ...articles])
-    setIdGenerator(idGenerator + 1)
+    const body = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({title: title, text: text})
+    }
+    fetch(articles_url, body).then(() => {
+      setComments([...comments, {articleId: -1, title: title, text: text, currentLikes: 0, commentsCount: 0}])
+    });
   }
 
   function addNewComment(newCommentText, articleId) {
-    // STUB
-    const newComment = {author: "admin", commentId: idGenerator, text: newCommentText, articleId: articleId}
-    setIdGenerator(idGenerator + 1)
-    setComments([...comments, newComment])
+    const body = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({author: 'admin', text: newCommentText, articleId: articleId})
+    }
+    fetch(comments_url, body).then(() => {
+      setComments([...comments, {commentId: -1, author: 'admin', text: newCommentText, articleId: articleId}])
+    });
   }
 
   function deleteComment(commentId) {
-    // STUB
-    setComments(comments.filter((item) => {return item.commentId !== commentId}))
+    const body = {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+    }
+    fetch(comments_url + '/' + commentId, body).then(() => {
+      setComments(comments.filter((item) => item.commentId !== commentId))
+    });
   }
 
   return <div className="mainHolder">
