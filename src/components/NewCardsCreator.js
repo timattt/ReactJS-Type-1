@@ -1,11 +1,11 @@
 import {useState} from "react";
-import './styles/NewCardsCreator.css'
+import styles from './styles/NewCardsCreator.scss'
 
 export default function NewCardsCreator(props) {
     const [title, setTitle] = useState("New title")
     const [text, setText] = useState("Some text...")
 
-    return <div className="creatorHolder">
+    return <div className={styles.creatorHolder}>
         <form onSubmit={(event) => {
             event.preventDefault();
             props.addNewArticle(text, title);
@@ -16,7 +16,7 @@ export default function NewCardsCreator(props) {
             <h3>Text:</h3>
             <textarea value={text} onChange={(event) => {setText(event.target.value)}}/>
             <br/>
-            <input className="submit" type="submit" value="Send" />
+            <input className={styles.submit} type="submit" value="Send" />
 
         </form>
     </div>

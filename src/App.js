@@ -1,6 +1,6 @@
 import CardComponent from './components/Card'
 import NewCardsCreator from "./components/NewCardsCreator";
-import './styles/App.css'
+import styles from './styles/App.scss'
 import {useState} from "react";
 
 const articles_url = "http://" + process.env.REACT_APP_BACKEND_IP + ":" + process.env.REACT_APP_BACKEND_PORT + "/articles"
@@ -63,9 +63,9 @@ function App() {
     });
   }
 
-  return <div className="mainHolder">
+  return <div className={styles.mainHolder}>
     <NewCardsCreator addNewArticle={addNewArticle}/>
-    <div className="cardsHolder">
+    <div className={styles.cardsHolder}>
       {
         articles.map((item, i) => {
         return <CardComponent key={item.articleId}
