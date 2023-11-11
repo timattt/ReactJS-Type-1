@@ -1,10 +1,10 @@
 import {useState} from "react";
-import styles from './styles/NewCardsCreator.scss'
+import styles from '../styles/NewCardsCreator.module.scss'
 
 export default function NewCardsCreator(props) {
     const [title, setTitle] = useState("New title")
     const [text, setText] = useState("Some text...")
-
+    console.log(styles)
     return <div className={styles.creatorHolder}>
         <form onSubmit={(event) => {
             event.preventDefault();

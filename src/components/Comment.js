@@ -1,4 +1,4 @@
-import styles from './styles/Comment.scss'
+import styles from '../styles/Comment.module.scss'
 
 export default function Comment(props) {
     const {author, text, commentId} = props.data

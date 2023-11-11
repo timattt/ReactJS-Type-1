@@ -1,6 +1,6 @@
 import CardComponent from './components/Card'
 import NewCardsCreator from "./components/NewCardsCreator";
-import styles from './styles/App.scss'
+import styles from './styles/App.module.scss'
 import {useState} from "react";
 
 const articles_url = "http://" + process.env.REACT_APP_BACKEND_IP + ":" + process.env.REACT_APP_BACKEND_PORT + "/articles"
