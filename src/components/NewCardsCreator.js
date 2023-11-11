@@ -1,11 +1,16 @@
-import {useState} from "react";
+import { useState } from "react";
 import styles from '../styles/NewCardsCreator.module.scss'
+import classNames from "classnames/bind";
+import { useMediaQuery } from 'usehooks-ts'
+
 
 export default function NewCardsCreator(props) {
     const [title, setTitle] = useState("New title")
     const [text, setText] = useState("Some text...")
-    console.log(styles)
-    return <div className={styles.creatorHolder}>
+    const matches = useMediaQuery('(min-width: 1000px)')
+    const cx = classNames.bind(styles)
+
+    return <div className={cx(styles.creatorHolder, {small: matches})}>
         <form onSubmit={(event) => {
             event.preventDefault();
             props.addNewArticle(text, title);
