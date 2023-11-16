@@ -2,9 +2,10 @@ import { useState } from "react";
 import styles from '../styles/NewCardsCreator.module.scss'
 import classNames from "classnames/bind";
 import { useMediaQuery } from 'usehooks-ts'
+import {connect} from "react-redux";
+import {addArticle} from "../store/actions/articlesActions";
 
-
-export default function NewCardsCreator(props) {
+function NewCardsCreator(props) {
     const [title, setTitle] = useState("New title")
     const [text, setText] = useState("Some text...")
     const matches = useMediaQuery('(min-width: 1000px)')
@@ -25,5 +26,13 @@ export default function NewCardsCreator(props) {
 
         </form>
     </div>
-
 }
+
+export default connect(
+    (state) => {
+        return {}
+    },
+    (dispatch) => {
+        return {addNewArticle: (text, title) => dispatch(addArticle(text, title))}
+    }
+)(NewCardsCreator);

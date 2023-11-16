@@ -26,7 +26,30 @@
     align-self: flex-start;
 }
 
+.edit {
+    align-self: flex-start;
+}
+
+.editPane {
+
+}
+
 .liked {
     transform: rotate(1deg);
     border: 1px solid;
+}
+
+.sortingType {
+
+}
+
+.bottomToolbar {
+    align-self: flex-start;
+}
+
+.topToolbar {
+    align-self: flex-end;
+}
+
+.deleteButton {
 }
