@@ -20,18 +20,19 @@ const TopToolbar = connect(
         }
     })((props) => {
         const [liked, setLiked] = useState(false)
-
+        const creationDate = new Date(props.article.creationTime)
         return <div className={styles.topToolbar}>
+            {"Created at " + creationDate.getHours() + ":" + creationDate.getMinutes() + ":" + creationDate.getSeconds()}
             <button className={styles.deleteButton} onClick={() => {
-                props.deleteArticle(props.articleId)
+                props.deleteArticle(props.article.articleId)
             }}>
                 Delete
             </button>
             <button className={styles.likeButton} onClick={() => {
                 if (liked) {
-                    props.unlikeArticle(props.articleId)
+                    props.unlikeArticle(props.article.articleId)
                 } else {
-                    props.likeArticle(props.articleId)
+                    props.likeArticle(props.article.articleId)
                 }
                 setLiked(!liked)
             }} style={{backgroundColor: (liked ? "blue" : "white")}}>
@@ -54,7 +55,7 @@ class CardComponent extends React.Component {
     render() {
         const {title, text, likesCount} = this.props.article
         return (<div className={this.cx(styles.CardComponent, {liked: this.props.article.liked})}>
-            <TopToolbar articleId={this.props.article.articleId}/>
+            <TopToolbar article={this.props.article}/>
             <h2>{title}</h2>
             {text}
             <h3 className={this.cx(styles.likesCount)}>Likes: {likesCount}</h3>

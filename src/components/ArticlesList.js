@@ -10,7 +10,7 @@ function ArticlesList(props) {
                 if (props.articlesSortingType === SortingTypes.byDate) {
                     return new Date(a.creationTime).getTime() - new Date(b.creationTime).getTime()
                 }
-                if (props.commentsSortingType === SortingTypes.byLikes) {
+                if (props.articlesSortingType === SortingTypes.byLikes) {
                     return -a.likesCount + b.likesCount
                 }
                 return 0
