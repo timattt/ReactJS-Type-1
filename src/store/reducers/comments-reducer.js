@@ -39,6 +39,18 @@ export const commentsReducer = (state = initialState(), action) => {
                 })
             }
         }
+        case CommentsActionTypes.editComment: {
+            return {
+                ...state,
+                comments: state.comments.map(comment => {
+                    if (comment.commentId === action.payload.commentId) {
+                        return action.payload
+                    } else {
+                        return comment
+                    }
+                })
+            }
+        }
         case CommentsActionTypes.unlikeComment: {
             return {
                 ...state,

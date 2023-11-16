@@ -6,7 +6,7 @@ import classNames from "classnames/bind";
 import {connect} from "react-redux";
 import {changeCommentsSortingType} from "../store/actions/commentsActions";
 import {SortingTypes} from "../store/constants";
-import {deleteArticle, likeArticle, unlikeArticle} from "../store/actions/articlesActions";
+import {deleteArticle, editArticle, likeArticle, unlikeArticle} from "../store/actions/articlesActions";
 
 const TopToolbar = connect(
     () => {
@@ -41,57 +41,85 @@ const TopToolbar = connect(
         </div>
 })
 
-class CardComponent extends React.Component {
+function ViewContent(props) {
+    const {title, text, likesCount} = props.props.article
+    return <div>
+        <h2>{title}</h2>
+        {text}
+        <h3 className={styles.likesCount}>Likes: {likesCount}</h3>
+    </div>
+}
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            showComments: false
+const EditContent = connect(
+    (state) => {
+        return {}
+    },
+    (dispatch) => {
+        return {editArticle: (articleId, text, title) => dispatch(editArticle(articleId, text, title))}
+    }
+)((props) => {
+    const {likesCount, articleId} = props.props.article
+
+    const [text, setText] = useState(props.props.article.text)
+    const [title, setTitle] = useState(props.props.article.title)
+
+    return <div className={styles.editPane}>
+        <form onSubmit={(event) => {
+            event.preventDefault();
+            props.editArticle(articleId, text, title)
+        }}>
+            <textarea value={title} onChange={(event) => {setTitle(event.target.value)}}/>
+            <br/>
+            <textarea value={text} onChange={(event) => {setText(event.target.value)}}/>
+            <br/>
+            <input type="submit" value="Send"/>
+        </form>
+        <h3 className={styles.likesCount}>Likes: {likesCount}</h3>
+    </div>
+})
+
+function CardComponent(props) {
+    const [showComments, setShowComments] = useState(false)
+    const [isViewMode, setIsViewMode] = useState(true)
+    const cx = classNames.bind(styles)
+
+    return (<div className={cx(styles.CardComponent, {liked: props.article.liked})}>
+        <TopToolbar article={props.article}/>
+
+        {isViewMode ? <ViewContent props={props}/> : <EditContent props={props}/>}
+
+        <div className={styles.bottomToolbar}>
+            <button className={cx(styles.showComments)} onClick={() => {setShowComments(!showComments)}}>Show comments</button>
+            <button className={cx(styles.edit)} onClick={() => {setIsViewMode(!isViewMode)}}>Edit</button>
+            <button className={styles.sortingType} onClick={() => {
+                if(props.commentsSortingType === SortingTypes.byLikes) {
+                    props.changeCommentsSortingType(SortingTypes.byDate)
+                } else {
+                    props.changeCommentsSortingType(SortingTypes.byLikes)
+                }
+            }}>{props.commentsSortingType === SortingTypes.byLikes ? "Likes" : "Date"}</button>
+        </div>
+        {
+                showComments ?
+                <div className={cx(styles.commentsHolder)}>
+                {
+                    props.comments.sort((a, b) => {
+                        if (props.commentsSortingType === SortingTypes.byDate) {
+                            return new Date(a.creationTime).getTime() - new Date(b.creationTime).getTime()
+                        }
+                        if (props.commentsSortingType === SortingTypes.byLikes) {
+                            return -a.likesCount + b.likesCount
+                        }
+                        return 0
+                    }).map((item) => {
+                        return <Comment key={item.commentId}
+                                        data={item}/>
+                    })
+                }
+                <NewCommentsCreator articleId={props.article.articleId}/>
+                </div> : <div/>
         }
-
-        this.cx = classNames.bind(styles)
-    }
-
-    render() {
-        const {title, text, likesCount} = this.props.article
-        return (<div className={this.cx(styles.CardComponent, {liked: this.props.article.liked})}>
-            <TopToolbar article={this.props.article}/>
-            <h2>{title}</h2>
-            {text}
-            <h3 className={this.cx(styles.likesCount)}>Likes: {likesCount}</h3>
-
-            <div className={styles.bottomToolbar}>
-                <button className={this.cx(styles.showComments)} onClick={() => {this.setState((prev) => ({...prev, showComments: !prev.showComments}))}}>Show comments</button>
-                <button className={styles.sortingType} onClick={() => {
-                    if(this.props.commentsSortingType === SortingTypes.byLikes) {
-                        this.props.changeCommentsSortingType(SortingTypes.byDate)
-                    } else {
-                        this.props.changeCommentsSortingType(SortingTypes.byLikes)
-                    }
-                }}>{this.props.commentsSortingType === SortingTypes.byLikes ? "Likes" : "Date"}</button>
-            </div>
-            {
-                    this.state.showComments ?
-                    <div className={this.cx(styles.commentsHolder)}>
-                    {
-                        this.props.comments.sort((a, b) => {
-                            if (this.props.commentsSortingType === SortingTypes.byDate) {
-                                return new Date(a.creationTime).getTime() - new Date(b.creationTime).getTime()
-                            }
-                            if (this.props.commentsSortingType === SortingTypes.byLikes) {
-                                return -a.likesCount + b.likesCount
-                            }
-                            return 0
-                        }).map((item) => {
-                            return <Comment key={item.commentId}
-                                            data={item}/>
-                        })
-                    }
-                    <NewCommentsCreator articleId={this.props.article.articleId}/>
-                    </div> : <div/>
-            }
-        </div>);
-    }
+    </div>);
 }
 
 export default connect(

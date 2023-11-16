@@ -51,6 +51,18 @@ export const articlesReducer = (state = initialState(), action) => {
                 })
             }
         }
+        case ArticlesActionTypes.editArticle: {
+            return {
+                ...state,
+                articles: state.articles.map(article => {
+                    if (article.articleId === action.payload.articleId) {
+                        return action.payload
+                    } else {
+                        return article
+                    }
+                })
+            }
+        }
         default: {
             return state
         }

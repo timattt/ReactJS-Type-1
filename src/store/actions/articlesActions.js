@@ -61,6 +61,25 @@ export function deleteArticle(articleId) {
     }
 }
 
+export function editArticle(articleId, text, title) {
+    console.log("Article with id: [" + articleId + "] edited to text: [" + text + "], title: [" + title + "]")
+    return dispatch => {
+        const body = {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({articleId: articleId, title: title, text: text})
+        }
+        return fetch(articles_url, body).then(response => response.json()).then(article => {
+            dispatch({
+                type: ArticlesActionTypes.editArticle,
+                payload: article
+            })
+        }).catch(err => {
+            console.log("Error while fetching in editArticle: " + err)
+        })
+    }
+}
+
 export function likeArticle(articleId) {
     console.log("Like article with id: [" + articleId + "]")
     return dispatch => {
@@ -68,7 +87,7 @@ export function likeArticle(articleId) {
             method: 'PATCH',
             headers: { 'Content-Type': 'application/json' },
         }
-        return fetch(articles_url + `/like?id=${articleId}`, body).then(() => {
+        return fetch(articles_url + '/' + articleId + '/like', body).then(() => {
             dispatch({
                 type: ArticlesActionTypes.likeArticle,
                 payload: articleId
@@ -86,7 +105,7 @@ export function unlikeArticle(articleId) {
             method: 'PATCH',
             headers: { 'Content-Type': 'application/json' },
         }
-        return fetch(articles_url + `/unlike?id=${articleId}`, body).then(() => {
+        return fetch(articles_url + '/' + articleId + '/unlike', body).then(() => {
             dispatch({
                 type: ArticlesActionTypes.unlikeArticle,
                 payload: articleId

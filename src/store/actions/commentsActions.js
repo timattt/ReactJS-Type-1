@@ -61,6 +61,25 @@ export function deleteComment(commentId) {
     }
 }
 
+export function editComment(commentId, text) {
+    console.log("Editing comment with id: [" + commentId + "], with text: [" + text + "]")
+    return dispatch => {
+        const body = {
+            method: 'PATCH',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({commentId: commentId, text: text})
+        }
+        return fetch(comments_url, body).then(response => response.json()).then(comment => {
+            dispatch({
+                type: CommentsActionTypes.editComment,
+                payload: comment
+            })
+        }).catch(err => {
+            console.log("Error while fetching in addNewComment: " + err)
+        })
+    }
+}
+
 export function likeComment(commentId) {
     console.log("Like comment with id: [" + commentId + "]")
     return dispatch => {
@@ -68,7 +87,7 @@ export function likeComment(commentId) {
             method: 'PATCH',
             headers: { 'Content-Type': 'application/json' },
         }
-        return fetch(comments_url + `/like?id=${commentId}`, body).then(() => {
+        return fetch(comments_url + '/' + commentId + '/like', body).then(() => {
             dispatch({
                 type: CommentsActionTypes.likeComment,
                 payload: commentId
@@ -86,7 +105,7 @@ export function unlikeComment(commentId) {
             method: 'PATCH',
             headers: { 'Content-Type': 'application/json' },
         }
-        return fetch(comments_url + `/unlike?id=${commentId}`, body).then(() => {
+        return fetch(comments_url + '/' + commentId + '/unlike', body).then(() => {
             dispatch({
                 type: CommentsActionTypes.unlikeComment,
                 payload: commentId
