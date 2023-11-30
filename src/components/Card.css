@@ -1,0 +1,20 @@
+.CardComponent {
+    background-color: lightcoral;
+    text-align: center;
+    margin: 2% 20% 3%;
+    padding: 2% 1% 2%;
+}
+
+.likesCount {
+    margin-top: 4%;
+    text-align: center;
+    position: relative;
+    left: -42%;
+}
+
+.likeButton {
+    text-align: center;
+    position: relative;
+    left: 42%;
+    margin-bottom: 4%;
+}
