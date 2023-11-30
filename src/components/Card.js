@@ -1,5 +1,5 @@
 import styles from '../styles/Card.module.scss'
-import React, {useState} from 'react';
+import React, {useReducer, useState} from 'react';
 import Comment from "./Comment";
 import NewCommentsCreator from "./NewCommentsCreator";
 import classNames from "classnames/bind";
@@ -8,6 +8,25 @@ import {changeCommentsSortingType} from "../store/actions/commentsActions";
 import {SortingTypes} from "../store/constants";
 import {deleteArticle, editArticle, likeArticle, unlikeArticle} from "../store/actions/articlesActions";
 import {useNavigate} from "react-router-dom";
+
+const cardActionTypes = {
+    LIKES_CHANGED: "LIKE",
+    TEXT_CHANGED: "TEXT",
+    TITLE_CHANGED: "TITLE"
+}
+
+function cardReducer(state = {}, action) {
+    switch (action.type) {
+        default:
+            return state
+        case cardActionTypes.TITLE_CHANGED:
+            return {...state, title: action.payload}
+        case cardActionTypes.TEXT_CHANGED:
+            return {...state, text: action.payload}
+        case cardActionTypes.LIKES_CHANGED:
+            return {...state, liked: action.payload}
+    }
+}
 
 const TopToolbar = connect(
     () => {
@@ -20,7 +39,6 @@ const TopToolbar = connect(
             deleteArticle: (articleId) => dispatch(deleteArticle(articleId))
         }
     })((props) => {
-        const [liked, setLiked] = useState(false)
         const creationDate = new Date(props.article.creationTime)
         const navigate = useNavigate()
 
@@ -32,13 +50,13 @@ const TopToolbar = connect(
                 Delete
             </button>
             <button className={styles.likeButton} onClick={() => {
-                if (liked) {
+                if (props.state.liked) {
                     props.unlikeArticle(props.article.articleId)
                 } else {
                     props.likeArticle(props.article.articleId)
                 }
-                setLiked(!liked)
-            }} style={{backgroundColor: (liked ? "blue" : "white")}}>
+                props.dispatch({type: cardActionTypes.LIKES_CHANGED, payload: !props.state.liked})
+            }} style={{backgroundColor: (props.liked ? "blue" : "white")}}>
                 LIKE!
             </button>
             <button className={styles.expandButton} onClick={() => {
@@ -50,10 +68,10 @@ const TopToolbar = connect(
 })
 
 function ViewContent(props) {
-    const {title, text, likesCount} = props.props.article
+    const {likesCount} = props.props.article
     return <div>
-        <h2>{title}</h2>
-        {text}
+        <h2>{props.state.title}</h2>
+        {props.state.text}
         <h3 className={styles.likesCount}>Likes: {likesCount}</h3>
     </div>
 }
@@ -68,17 +86,18 @@ const EditContent = connect(
 )((props) => {
     const {likesCount, articleId} = props.props.article
 
-    const [text, setText] = useState(props.props.article.text)
-    const [title, setTitle] = useState(props.props.article.title)
-
     return <div className={styles.editPane}>
         <form onSubmit={(event) => {
             event.preventDefault();
-            props.editArticle(articleId, text, title)
+            props.editArticle(articleId, props.state.text, props.state.title)
         }}>
-            <textarea value={title} onChange={(event) => {setTitle(event.target.value)}}/>
+            <textarea value={props.state.title} onChange={(event) => {
+                props.dispatch({type: cardActionTypes.TITLE_CHANGED, payload: event.target.value})
+            }}/>
             <br/>
-            <textarea value={text} onChange={(event) => {setText(event.target.value)}}/>
+            <textarea value={props.state.text} onChange={(event) => {
+                props.dispatch({type: cardActionTypes.TEXT_CHANGED, payload: event.target.value})
+            }}/>
             <br/>
             <input type="submit" value="Send"/>
         </form>
@@ -90,12 +109,19 @@ function CardComponent(props) {
     const [showComments, setShowComments] = useState(false)
     const [isViewMode, setIsViewMode] = useState(true)
     const cx = classNames.bind(styles)
+    const [state, dispatch] = useReducer(cardReducer, {
+        liked: props.article.liked,
+        text: props.article.text,
+        title: props.article.title
+    })
 
-    return (<div className={cx(styles.CardComponent, {liked: props.article.liked})}>
-        <TopToolbar article={props.article}/>
-
-        {isViewMode ? <ViewContent props={props}/> : <EditContent props={props}/>}
-
+    return (<div className={cx(styles.CardComponent, {liked: state.liked})}>
+        <TopToolbar article={props.article} state={state} dispatch={dispatch}/>
+        {
+            isViewMode ?
+            <ViewContent props={props} state={state} dispatch={dispatch}/> :
+            <EditContent props={props} state={state} dispatch={dispatch}/>
+        }
         <div className={styles.bottomToolbar}>
             <button className={cx(styles.showComments)} onClick={() => {setShowComments(!showComments)}}>Show comments</button>
             <button className={cx(styles.edit)} onClick={() => {setIsViewMode(!isViewMode)}}>Edit</button>
