@@ -1,12 +1,14 @@
 import './Card.css'
 import React from 'react';
+import Comment from "./Comment";
+import NewCommentsCreator from "./NewCommentsCreator";
 
 class CardComponent extends React.Component {
-
     constructor(props) {
         super(props);
         this.state = {
-            liked: false
+            liked: false,
+            showComments: false
         }
 
         this.clickHandler = this.clickHandler.bind(this)
@@ -14,24 +16,34 @@ class CardComponent extends React.Component {
 
     clickHandler() {
         this.setState((prev) => ({
+            ...prev,
             liked: !prev.liked
         }))
     }
 
     render() {
-        let {title, text, currentLikes} = this.props.props
+        let {title, text, currentLikes} = this.props.article
         return (<div className="CardComponent">
             <button className="likeButton" onClick={this.clickHandler} style={{backgroundColor: (this.state.liked ? "blue" : "white")}}>
                 LIKE!
             </button>
             <h2>{title}</h2>
-            <div className="text">
-                {text}
-            </div>
-            <br/>
-            <div className="likesCount">
-                <h3>Likes: {currentLikes + this.state.liked}</h3>
-            </div>
+            {text}
+            <h3 className="likesCount">Likes: {currentLikes + this.state.liked}</h3>
+            <button className="showComments" onClick={() => {this.setState((prev) => ({...prev, showComments: !prev.showComments}))}}>Show comments</button>
+            {
+                    this.state.showComments ?
+                    <div className="commentsHolder">
+                    {
+                        this.props.comments.map((item) => {
+                            return <Comment key={item.commentId}
+                                            data={item}
+                                            deleteCommentCallback={this.props.deleteComment}/>
+                        })
+                    }
+                    <NewCommentsCreator insertCommentCallback={this.props.addNewComment} articleId={this.props.article.articleId}/>
+                    </div> : <div/>
+            }
         </div>);
     }
 }
