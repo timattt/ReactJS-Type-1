@@ -7,6 +7,7 @@ import {connect} from "react-redux";
 import {changeCommentsSortingType} from "../store/actions/commentsActions";
 import {SortingTypes} from "../store/constants";
 import {deleteArticle, editArticle, likeArticle, unlikeArticle} from "../store/actions/articlesActions";
+import {useNavigate} from "react-router-dom";
 
 const TopToolbar = connect(
     () => {
@@ -21,6 +22,8 @@ const TopToolbar = connect(
     })((props) => {
         const [liked, setLiked] = useState(false)
         const creationDate = new Date(props.article.creationTime)
+        const navigate = useNavigate()
+
         return <div className={styles.topToolbar}>
             {"Created at " + creationDate.getHours() + ":" + creationDate.getMinutes() + ":" + creationDate.getSeconds()}
             <button className={styles.deleteButton} onClick={() => {
@@ -37,6 +40,11 @@ const TopToolbar = connect(
                 setLiked(!liked)
             }} style={{backgroundColor: (liked ? "blue" : "white")}}>
                 LIKE!
+            </button>
+            <button className={styles.expandButton} onClick={() => {
+                navigate("/articles/" + props.article.articleId)
+            }}>
+              Expand
             </button>
         </div>
 })

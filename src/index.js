@@ -7,6 +7,7 @@ import reportWebVitals from './other/reportWebVitals';
 import {applyMiddleware, createStore} from "redux";
 import {rootReducer} from "./store/reducers/root-reducer";
 import {Provider} from "react-redux";
+import {BrowserRouter} from "react-router-dom";
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -16,7 +17,9 @@ const store = createStore(rootReducer, applyMiddleware(
 
 root.render(
     <Provider store={store}>
-        <App />
+        <BrowserRouter>
+            <App />
+        </BrowserRouter>
     </Provider>
 );
 

@@ -1,41 +1,23 @@
-import NewCardsCreator from "./components/NewCardsCreator";
-import styles from './styles/App.module.scss'
 import {connect} from 'react-redux'
-import {changeArticlesSortingType, loadArticles} from "./store/actions/articlesActions";
-import ArticlesList from "./components/ArticlesList";
+import {loadArticles} from "./store/actions/articlesActions";
 import {loadComments} from "./store/actions/commentsActions";
-import {SortingTypes} from "./store/constants";
-
-const SortingSelector = connect(
-    (state) => {
-        return {
-            articlesSortingType: state.articlesReducer.articlesSortingType
-        }
-    },
-    (dispatch) => {
-        return {changeArticlesSortingType: (newType) => dispatch(changeArticlesSortingType(newType))}
-    }
-)((props) => {
-    return <div>
-        <button onClick={() => {
-            if(props.articlesSortingType === SortingTypes.byLikes) {
-                props.changeArticlesSortingType(SortingTypes.byDate)
-            } else {
-                props.changeArticlesSortingType(SortingTypes.byLikes)
-            }
-        }}>{props.articlesSortingType === SortingTypes.byLikes ? "Likes" : "Date"}</button>
-    </div>
-})
-
+import {Routes, Route} from  "react-router-dom";
+import {HomePage} from "./pages/HomePage";
+import {ArticlesPage} from "./pages/ArticlesPage";
+import {CoreLayout} from "./pages/CoreLayout";
+import {NotFoundPage} from "./pages/NotFoundPage";
+import {SingleArticlePage} from "./pages/SingleArticlePage";
 function App(props) {
-  props.loadArticles()
-  props.loadComments()
-
-  return <div className={styles.mainHolder}>
-      <NewCardsCreator/>
-      <ArticlesList/>
-      <SortingSelector/>
-    </div>
+    props.loadArticles()
+    props.loadComments()
+    return <Routes>
+        <Route path="/" element={<CoreLayout/>}>
+            <Route path="/" element={<HomePage/>}/>
+            <Route path="/articles" element={<ArticlesPage/>}/>
+            <Route path="/articles/:id" element={<SingleArticlePage/>}/>
+            <Route path="/*" element={<NotFoundPage/>}/>
+        </Route>
+    </Routes>
 }
 
 export default connect(

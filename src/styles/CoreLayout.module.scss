@@ -1,0 +1,18 @@
+@import "vars.module";
+
+.header {
+  padding: $sizeConstant;
+  text-align: center;
+  background-color: $headerColor;
+}
+
+.footer {
+  background-color: aqua;
+  padding: $sizeConstant;
+}
+
+.headerItem {
+  padding: $sizeConstant;
+  margin: $sizeConstant;
+  background-color: yellow;
+}
