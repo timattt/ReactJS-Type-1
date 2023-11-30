@@ -1,7 +1,9 @@
+@import "vars.module";
+
 .Comment {
-    background-color: lightblue;
+    background-color: $commentColor;
     display: flex;
-    margin: 10px;
+    margin: $commentMargin;
     flex-direction: row;
     justify-content: space-between;
 }

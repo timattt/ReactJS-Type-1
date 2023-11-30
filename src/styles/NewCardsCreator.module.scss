@@ -1,0 +1,17 @@
+@import "vars.module";
+
+.creatorHolder {
+    background-color: $cardCreatorColor;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+}
+
+.submit {
+    width: 100%;
+}
+
+.small {
+    transform: rotate(-3deg);
+}

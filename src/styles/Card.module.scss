@@ -1,14 +1,16 @@
+@import "vars.module";
+
 .CardComponent {
     display: inline-flex;
-    background-color: lightcoral;
+    background-color: $cardColor;
     text-align: center;
-    margin: 50px;
+    margin: $cardMargin;
     flex-direction: column;
 }
 
 .likesCount {
     align-self: flex-start;
-    margin: 30px;
+    margin: $likesCountMargin;
 }
 
 .likeButton {
@@ -22,4 +24,9 @@
 
 .showComments {
     align-self: flex-start;
+}
+
+.liked {
+    transform: rotate(1deg);
+    border: 1px solid;
 }
