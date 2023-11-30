@@ -1,5 +1,5 @@
 import styles from '../styles/Card.module.scss'
-import React, {useReducer, useState} from 'react';
+import React, {useReducer} from 'react';
 import Comment from "./Comment";
 import NewCommentsCreator from "./NewCommentsCreator";
 import classNames from "classnames/bind";
@@ -12,7 +12,9 @@ import {useNavigate} from "react-router-dom";
 const cardActionTypes = {
     LIKES_CHANGED: "LIKE",
     TEXT_CHANGED: "TEXT",
-    TITLE_CHANGED: "TITLE"
+    TITLE_CHANGED: "TITLE",
+    SHOW_COMMENTS: "SHOW_COMMENTS",
+    VIEW_MODE: "VIEW_MODE"
 }
 
 function cardReducer(state = {}, action) {
@@ -25,6 +27,10 @@ function cardReducer(state = {}, action) {
             return {...state, text: action.payload}
         case cardActionTypes.LIKES_CHANGED:
             return {...state, liked: action.payload}
+        case cardActionTypes.SHOW_COMMENTS:
+            return {...state, showComments: action.payload}
+        case cardActionTypes.VIEW_MODE:
+            return {...state, viewMode: action.payload}
     }
 }
 
@@ -77,7 +83,7 @@ function ViewContent(props) {
 }
 
 const EditContent = connect(
-    (state) => {
+    () => {
         return {}
     },
     (dispatch) => {
@@ -90,6 +96,7 @@ const EditContent = connect(
         <form onSubmit={(event) => {
             event.preventDefault();
             props.editArticle(articleId, props.state.text, props.state.title)
+            props.dispatch({type: cardActionTypes.VIEW_MODE, payload: true})
         }}>
             <textarea value={props.state.title} onChange={(event) => {
                 props.dispatch({type: cardActionTypes.TITLE_CHANGED, payload: event.target.value})
@@ -106,25 +113,29 @@ const EditContent = connect(
 })
 
 function CardComponent(props) {
-    const [showComments, setShowComments] = useState(false)
-    const [isViewMode, setIsViewMode] = useState(true)
     const cx = classNames.bind(styles)
     const [state, dispatch] = useReducer(cardReducer, {
         liked: props.article.liked,
         text: props.article.text,
-        title: props.article.title
+        title: props.article.title,
+        showComments: false,
+        viewMode: true
     })
 
     return (<div className={cx(styles.CardComponent, {liked: state.liked})}>
         <TopToolbar article={props.article} state={state} dispatch={dispatch}/>
         {
-            isViewMode ?
+            state.viewMode ?
             <ViewContent props={props} state={state} dispatch={dispatch}/> :
             <EditContent props={props} state={state} dispatch={dispatch}/>
         }
         <div className={styles.bottomToolbar}>
-            <button className={cx(styles.showComments)} onClick={() => {setShowComments(!showComments)}}>Show comments</button>
-            <button className={cx(styles.edit)} onClick={() => {setIsViewMode(!isViewMode)}}>Edit</button>
+            <button className={cx(styles.showComments)} onClick={() => {
+                dispatch({type: cardActionTypes.SHOW_COMMENTS, payload: !state.showComments})
+            }}>Show comments</button>
+            <button className={cx(styles.edit)} onClick={() => {
+                dispatch({type: cardActionTypes.VIEW_MODE, payload: !state.viewMode})
+            }}>Edit</button>
             <button className={styles.sortingType} onClick={() => {
                 if(props.commentsSortingType === SortingTypes.byLikes) {
                     props.changeCommentsSortingType(SortingTypes.byDate)
@@ -134,7 +145,7 @@ function CardComponent(props) {
             }}>{props.commentsSortingType === SortingTypes.byLikes ? "Likes" : "Date"}</button>
         </div>
         {
-                showComments ?
+                state.showComments ?
                 <div className={cx(styles.commentsHolder)}>
                 {
                     props.comments.sort((a, b) => {
