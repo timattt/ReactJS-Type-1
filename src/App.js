@@ -4,10 +4,12 @@ import {loadComments} from "./store/actions/commentsActions";
 import {Route, Routes, useLocation} from "react-router-dom";
 import {HomePage} from "./pages/HomePage";
 import {ArticlesPage} from "./pages/ArticlesPage";
-import {CoreLayout} from "./pages/CoreLayout";
+import CoreLayout from "./pages/CoreLayout";
 import {NotFoundPage} from "./pages/NotFoundPage";
 import {SingleArticlePage} from "./pages/SingleArticlePage";
 import {useEffect} from "react";
+import LoginPage from "./pages/LoginPage";
+import RegistrationPage from "./pages/RegistrationPage";
 
 function App(props) {
     props.loadArticles()
@@ -25,12 +27,14 @@ function App(props) {
             <Route path="/articles" element={<ArticlesPage/>}/>
             <Route path="/articles/:id" element={<SingleArticlePage/>}/>
             <Route path="/*" element={<NotFoundPage/>}/>
+            <Route path="/login" element={<LoginPage/>}/>
+            <Route path="/register" element={<RegistrationPage/>}/>
         </Route>
     </Routes>
 }
 
 export default connect(
-    () => {return {}},
+    (state) => {return {token: state.authReducer.token}},
     (dispatch) => {
       return {loadComments: () => dispatch(loadComments()), loadArticles: () => dispatch(loadArticles())}
     }

@@ -143,6 +143,7 @@ function CardComponent(props) {
                     props.changeCommentsSortingType(SortingTypes.byLikes)
                 }
             }}>{props.commentsSortingType === SortingTypes.byLikes ? "Likes" : "Date"}</button>
+            {"Created by: " + props.article.author}
         </div>
         {
                 state.showComments ?
