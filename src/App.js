@@ -1,17 +1,25 @@
-import {connect} from 'react-redux'
+import {connect, Provider} from 'react-redux'
 import {loadArticles} from "./store/actions/articlesActions";
 import {loadComments} from "./store/actions/commentsActions";
-import {Route, Routes, useLocation} from "react-router-dom";
+import {BrowserRouter, Route, Routes, useLocation} from "react-router-dom";
 import {HomePage} from "./pages/HomePage";
 import {ArticlesPage} from "./pages/ArticlesPage";
 import CoreLayout from "./pages/CoreLayout";
 import {NotFoundPage} from "./pages/NotFoundPage";
 import {SingleArticlePage} from "./pages/SingleArticlePage";
-import {useEffect} from "react";
+import React, {useEffect} from "react";
 import LoginPage from "./pages/LoginPage";
 import RegistrationPage from "./pages/RegistrationPage";
+import {applyMiddleware, createStore} from "redux";
+import {rootReducer} from "./store/reducers/root-reducer";
+import thunkMiddleware from "redux-thunk";
 
-function App(props) {
+const App = connect(
+    (state) => {return {token: state.authReducer.token}},
+    (dispatch) => {
+      return {loadComments: () => dispatch(loadComments()), loadArticles: () => dispatch(loadArticles())}
+    }
+)((props) => {
     props.loadArticles()
     props.loadComments()
 
@@ -31,11 +39,16 @@ function App(props) {
             <Route path="/register" element={<RegistrationPage/>}/>
         </Route>
     </Routes>
-}
+});
 
-export default connect(
-    (state) => {return {token: state.authReducer.token}},
-    (dispatch) => {
-      return {loadComments: () => dispatch(loadComments()), loadArticles: () => dispatch(loadArticles())}
-    }
-)(App);
+const store = createStore(rootReducer, applyMiddleware(
+    thunkMiddleware
+))
+
+export default function AppWrapper() {
+    return <Provider store={store}>
+        <BrowserRouter>
+            <App />
+        </BrowserRouter>
+    </Provider>
+}
