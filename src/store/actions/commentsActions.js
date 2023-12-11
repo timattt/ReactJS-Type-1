@@ -11,9 +11,12 @@ export const changeCommentsSortingType = (newType) => {
 }
 
 export function loadComments() {
+    const token = window.localStorage.getItem("type1token")
     console.log("Loading comments")
     return dispatch => {
-        return fetch(comments_url).then((response) => response.json()).then((comments) => {
+        return fetch(comments_url,{ headers: {
+                "Authorization": 'Bearer ' + token
+            }}).then((response) => response.json()).then((comments) => {
             dispatch({
                 type: CommentsActionTypes.loadComments,
                 payload: comments
@@ -25,11 +28,12 @@ export function loadComments() {
 }
 
 export function addNewComment(newCommentText, articleId) {
+    const token = window.localStorage.getItem("type1token")
     console.log("Adding new comment with text: [" + newCommentText + "], articleId: [" + articleId + "]")
     return dispatch => {
         const body = {
             method: 'POST',
-            headers: {'Content-Type': 'application/json'},
+            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
             body: JSON.stringify({author: 'admin', text: newCommentText, articleId: articleId})
         }
         return fetch(comments_url, body).then(response => response.json()).then(comment => {
@@ -44,11 +48,12 @@ export function addNewComment(newCommentText, articleId) {
 }
 
 export function deleteComment(commentId) {
+    const token = window.localStorage.getItem("type1token")
     console.log("Deleting comment with id: [" + commentId + "]")
     return dispatch => {
         const body = {
             method: 'DELETE',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
         }
         return fetch(comments_url + '/' + commentId, body).then(() => {
             dispatch({
@@ -62,11 +67,12 @@ export function deleteComment(commentId) {
 }
 
 export function editComment(commentId, text) {
+    const token = window.localStorage.getItem("type1token")
     console.log("Editing comment with id: [" + commentId + "], with text: [" + text + "]")
     return dispatch => {
         const body = {
             method: 'PATCH',
-            headers: {'Content-Type': 'application/json'},
+            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
             body: JSON.stringify({commentId: commentId, text: text})
         }
         return fetch(comments_url, body).then(response => response.json()).then(comment => {
@@ -81,11 +87,12 @@ export function editComment(commentId, text) {
 }
 
 export function likeComment(commentId) {
+    const token = window.localStorage.getItem("type1token")
     console.log("Like comment with id: [" + commentId + "]")
     return dispatch => {
         const body = {
             method: 'PATCH',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
         }
         return fetch(comments_url + '/' + commentId + '/like', body).then(() => {
             dispatch({
@@ -99,11 +106,12 @@ export function likeComment(commentId) {
 }
 
 export function unlikeComment(commentId) {
+    const token = window.localStorage.getItem("type1token")
     console.log("Unlike comment with id: [" + commentId + "]")
     return dispatch => {
         const body = {
             method: 'PATCH',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
         }
         return fetch(comments_url + '/' + commentId + '/unlike', body).then(() => {
             dispatch({

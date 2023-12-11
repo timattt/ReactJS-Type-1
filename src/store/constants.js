@@ -18,6 +18,18 @@ export const ArticlesActionTypes = {
     unlikeArticle: 'UNLIKE_ARTICLE'
 }
 
+export const AuthActionTypes = {
+    register: 'REGISTER',
+    login: 'LOGIN',
+    unLogin: 'UN_LOGIN'
+}
+
+export const AuthResultTypes = {
+    success: "SUCCESS",
+    error: "ERROR",
+    unknown: "UNKNOWN"
+}
+
 export const SortingTypes = {
     byDate: 'BY_DATE',
     byLikes: 'BY_LIKES'

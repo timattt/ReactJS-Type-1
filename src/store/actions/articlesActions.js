@@ -11,9 +11,12 @@ export const changeArticlesSortingType = (newType) => {
 }
 
 export function loadArticles() {
+    const token = window.localStorage.getItem("type1token")
     console.log("Loading articles")
     return dispatch => {
-        return fetch(articles_url).then((response) => response.json()).then((comments) => {
+        return fetch(articles_url,{ headers: {
+            "Authorization": 'Bearer ' + token
+        }}).then((response) => response.json()).then((comments) => {
             dispatch({
                 type: ArticlesActionTypes.loadArticles,
                 payload: comments
@@ -25,11 +28,12 @@ export function loadArticles() {
 }
 
 export function addArticle(text, title) {
+    const token = window.localStorage.getItem("type1token")
     console.log("Adding new article with text: [" + text + "], title: [" + title + "]")
     return dispatch => {
         const body = {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
             body: JSON.stringify({title: title, text: text, creationTime: Date.now()})
         }
         return fetch(articles_url, body).then(response => response.json()).then(article => {
@@ -44,13 +48,14 @@ export function addArticle(text, title) {
 }
 
 export function deleteArticle(articleId) {
+    const token = window.localStorage.getItem("type1token")
     console.log("Removing article with id: [" + articleId + "]")
     return dispatch => {
         const body = {
             method: 'DELETE',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
         }
-        return fetch(articles_url + '/' + articleId, body).then(() => {
+        return fetch(articles_url + '/' + articleId, body).then(response => response.json()).then(() => {
             dispatch({
                 type: ArticlesActionTypes.removeArticle,
                 payload: articleId
@@ -62,11 +67,12 @@ export function deleteArticle(articleId) {
 }
 
 export function editArticle(articleId, text, title) {
+    const token = window.localStorage.getItem("type1token")
     console.log("Article with id: [" + articleId + "] edited to text: [" + text + "], title: [" + title + "]")
     return dispatch => {
         const body = {
             method: 'PATCH',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
             body: JSON.stringify({articleId: articleId, title: title, text: text})
         }
         return fetch(articles_url, body).then(response => response.json()).then(article => {
@@ -81,11 +87,12 @@ export function editArticle(articleId, text, title) {
 }
 
 export function likeArticle(articleId) {
+    const token = window.localStorage.getItem("type1token")
     console.log("Like article with id: [" + articleId + "]")
     return dispatch => {
         const body = {
             method: 'PATCH',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
         }
         return fetch(articles_url + '/' + articleId + '/like', body).then(() => {
             dispatch({
@@ -99,11 +106,12 @@ export function likeArticle(articleId) {
 }
 
 export function unlikeArticle(articleId) {
+    const token = window.localStorage.getItem("type1token")
     console.log("Unlike article with id: [" + articleId + "]")
     return dispatch => {
         const body = {
             method: 'PATCH',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
         }
         return fetch(articles_url + '/' + articleId + '/unlike', body).then(() => {
             dispatch({
